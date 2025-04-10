@@ -1,11 +1,10 @@
-<!-- templates/webhook_sent.html -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Webhook Sent</title>
-    <!-- Bootstrap CSS (from CDN) -->
+    <!-- Bootstrap CSS (CDN) -->
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
@@ -17,6 +16,10 @@
     />
   </head>
   <body>
+    <!-- Spinner Overlay -->
+    <div id="spinner-overlay" class="spinner-overlay" style="display: none">
+      <div class="spinner"></div>
+    </div>
     <div class="container my-5">
       <div class="alert alert-success text-center" role="alert">
         <h4 class="alert-heading">Webhook Sent Successfully!</h4>
@@ -27,8 +30,7 @@
         >
       </div>
     </div>
-
-    <!-- jQuery and Bootstrap JS (from CDN) -->
+    <!-- jQuery and Bootstrap JS (CDN) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->

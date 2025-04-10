@@ -1,11 +1,10 @@
-<!-- templates/index.html -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>URL Processing App</title>
-    <!-- Bootstrap CSS (from CDN) -->
+    <!-- Bootstrap CSS (CDN) -->
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
@@ -17,12 +16,16 @@
     />
   </head>
   <body>
+    <!-- Spinner Overlay -->
+    <div id="spinner-overlay" class="spinner-overlay" style="display: none">
+      <div class="spinner"></div>
+    </div>
     <div class="container my-5">
       <h1 class="text-center">URL Processing App</h1>
       {% if error %}
       <div class="alert alert-danger" role="alert">{{ error }}</div>
       {% endif %}
-      <form method="POST" class="mt-4">
+      <form method="POST" id="url-form">
         <div class="form-group">
           <label for="url">Enter the URL to process:</label>
           <input
@@ -34,13 +37,41 @@
             required
           />
         </div>
+        <!-- Content Mode Selector -->
+        <div class="form-group">
+          <label>Content Extraction Mode:</label>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="content_mode"
+              id="modeClean"
+              value="clean"
+              checked
+            />
+            <label class="form-check-label" for="modeClean">
+              Cleaned Content (Default)
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="content_mode"
+              id="modeFull"
+              value="full"
+            />
+            <label class="form-check-label" for="modeFull">
+              Full HTML Content
+            </label>
+          </div>
+        </div>
         <button type="submit" class="btn btn-primary btn-block">
           Process URL
         </button>
       </form>
     </div>
-
-    <!-- jQuery and Bootstrap JS (from CDN) -->
+    <!-- jQuery and Bootstrap JS (CDN) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->
