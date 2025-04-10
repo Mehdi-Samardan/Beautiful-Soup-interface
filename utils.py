@@ -3,7 +3,6 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
 import uuid
-import copy
 import re
 import json
 import shutil
@@ -64,19 +63,20 @@ def extract_all_meta(soup):
     return meta_tags
 
 def clean_content(soup):
-    # Remove unwanted tags (script, style)
-    for unwanted in soup(['script', 'style']):
-        unwanted.decompose()
-    # Allow only selected tags and remove attributes
+    # Remove script and style tags
+    for tag in soup(['script', 'style']):
+        tag.decompose()
+    # Define allowed basic tags
     allowed_tags = ["p", "a", "ul", "ol", "li"]
-    content_soup = copy.deepcopy(soup.body if soup.body else soup)
-    for tag in content_soup.find_all(True):
+    # Work on the <body> if available; otherwise use the whole document.
+    content_soup = soup.body if soup.body is not None else soup
+    # For each tag in the content, if it's not allowed, unwrap it.
+    for tag in list(content_soup.find_all(True)):
         if tag.name not in allowed_tags:
             tag.unwrap()
         else:
-            tag.attrs = {}
-    content_str = re.sub(r'\s+', ' ', str(content_soup)).strip()
-    return content_str
+            tag.attrs = {}   # Remove all attributes from allowed tags.
+    return str(content_soup)
 
 def zip_images(images_folder):
     shutil.make_archive(images_folder, 'zip', images_folder)
@@ -88,7 +88,9 @@ def process_url(url, headers, content_mode="clean"):
         return None
     soup = BeautifulSoup(html, "html.parser")
     h1_tag = soup.find("h1")
-    page_title = h1_tag.get_text(strip=True) if (h1_tag and h1_tag.get_text(strip=True)) else (soup.title.get_text(strip=True) if soup.title else "Title not found")
+    page_title = (h1_tag.get_text(strip=True)
+                  if (h1_tag and h1_tag.get_text(strip=True))
+                  else (soup.title.get_text(strip=True) if soup.title else "Title not found"))
     meta_title, meta_description = extract_meta(soup, page_title)
     meta_tags = extract_all_meta(soup)
     permalink = url
@@ -96,11 +98,10 @@ def process_url(url, headers, content_mode="clean"):
     soup = process_images(soup, url, headers, images_folder)
     
     if content_mode == "full":
-        # Return complete HTML of the <body> (or entire soup if <body> not found)
-        content = str(soup.body) if soup.body is not None else str(soup)
+        content = str(soup)
     else:
         content = clean_content(soup)
-        
+    
     zip_file_path = zip_images(images_folder)
     return {
         "page_title": page_title,
@@ -109,7 +110,8 @@ def process_url(url, headers, content_mode="clean"):
         "meta_tags": meta_tags,
         "permalink": permalink,
         "content": content,
-        "zip_file_path": zip_file_path
+        "zip_file_path": zip_file_path,
+        "content_mode": content_mode
     }
 
 def send_property_with_zip(prop_name, prop_value, zip_file_path, webhook_url):
@@ -130,9 +132,8 @@ def send_all_properties(bundle, webhook_url):
         send_property_with_zip(key, value, zip_file_path, webhook_url)
 
 def main():
-    # content_mode: "clean" for the cleaned output,
-    # "full" for the complete HTML (with tags) output.
-    content_mode = "full"  # Ayarlamak istediğiniz mod burada; "clean" de yapabilirsiniz.
+    # Set content_mode to "clean" for basic HTML (only p, a, ul, ol, li), or "full" for complete HTML document.
+    content_mode = "clean"
     url = "https://www.ellindecoratie.nl"
     webhook_url = "https://hook.eu2.make.com/is1dhkyhge8iuqg4jsxykh6dkyaejawy"
     headers = {
@@ -143,7 +144,7 @@ def main():
     bundle_data = process_url(url, headers, content_mode=content_mode)
     if not bundle_data:
         return
-    # (Optional) Save backup (excluding zip_file_path) to a JSON file.
+    # Save backup JSON (excluding zip_file_path)
     output_file = "output.json"
     try:
         backup_data = {k: v for k, v in bundle_data.items() if k != "zip_file_path"}
@@ -151,7 +152,6 @@ def main():
             json.dump(backup_data, f, ensure_ascii=False, indent=4)
     except Exception as e:
         pass
-    # Send each property with the same ZIP file to the webhook.
     send_all_properties(bundle_data, webhook_url)
     print("Process complete.")
 

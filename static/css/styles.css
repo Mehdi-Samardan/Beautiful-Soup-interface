@@ -60,7 +60,6 @@ h6 {
   transition: transform var(--transition-speed),
     box-shadow var(--transition-speed);
 }
-
 .card:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 12px var(--card-shadow);
@@ -74,7 +73,6 @@ form {
   box-shadow: 0 4px 6px var(--card-shadow);
   margin-bottom: 2rem;
 }
-
 .form-control {
   width: 100%;
   padding: 0.75rem;
@@ -83,7 +81,6 @@ form {
   margin-bottom: 1rem;
   transition: border var(--transition-speed);
 }
-
 .form-control:focus {
   border-color: var(--primary-color);
   outline: none;
@@ -102,54 +99,43 @@ form {
   transition: background-color var(--transition-speed),
     transform var(--transition-speed);
 }
-
 .btn-primary {
   background-color: var(--primary-color);
   color: #fff;
 }
-
 .btn-primary:hover {
   background-color: var(--primary-hover);
 }
-
 .btn-info {
   background-color: var(--info-color);
   color: #fff;
 }
-
 .btn-info:hover {
   background-color: var(--info-hover);
 }
-
 .btn-success {
   background-color: var(--success-color);
   color: #fff;
 }
-
 .btn-success:hover {
   background-color: var(--success-hover);
 }
-
 .btn-secondary {
   background-color: var(--secondary-color);
   color: #fff;
 }
-
 .btn-secondary:hover {
   background-color: var(--secondary-hover);
 }
-
 .btn-outline-primary {
   border: 2px solid var(--primary-color);
   color: var(--primary-color);
   background: transparent;
 }
-
 .btn-outline-primary:hover {
   background: var(--primary-color);
   color: #fff;
 }
-
 .btn-block {
   display: block;
   width: 100%;
@@ -161,4 +147,102 @@ form {
   border-radius: var(--border-radius);
   margin-bottom: 1rem;
   font-size: 1rem;
+}
+.alert-success {
+  background-color: #d4edda;
+  color: #155724;
+}
+.alert-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* List Group */
+.list-group {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.list-group-item {
+  padding: 0.75rem 1.25rem;
+  border: 1px solid #ddd;
+  border-radius: var(--border-radius);
+  margin-bottom: 0.5rem;
+  background-color: #000000;
+}
+
+/* Link Styles */
+a {
+  text-decoration: none;
+  color: var(--primary-color);
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* Spinner Overlay */
+.spinner-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+.spinner {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid var(--primary-color);
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Content Output Style */
+.content-output {
+  background-color: #222;
+  color: #e0e0e0;
+  padding: 0.5rem;
+  border-radius: var(--border-radius);
+  white-space: pre-wrap;
+  margin-bottom: 1rem;
+  font-size: 1em;
+  max-height: 400px;
+  overflow: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+.content-output::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* Pre element style */
+pre {
+  color: orange;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
+  }
+  .card,
+  form {
+    padding: 1rem;
+  }
+  .container {
+    padding: 1rem;
+  }
 }
