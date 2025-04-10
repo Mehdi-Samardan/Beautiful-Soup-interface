@@ -49,9 +49,21 @@ def extract_meta(soup, fallback_title):
     meta_og = soup.find("meta", property="og:title")
     meta_name = soup.find("meta", attrs={"name": "title"})
     meta_desc_tag = soup.find("meta", attrs={"name": "description"})
-    meta_title = (meta_og.get("content") or meta_name.get("content")).strip() if (meta_og or meta_name) else fallback_title
-    meta_description = meta_desc_tag.get("content").strip() if meta_desc_tag else "Meta description not found"
+    
+    # Check meta_og first. If present and has content, use it.
+    if meta_og is not None and meta_og.get("content"):
+        title_content = meta_og.get("content")
+    # Otherwise, check meta_name.
+    elif meta_name is not None and meta_name.get("content"):
+        title_content = meta_name.get("content")
+    else:
+        title_content = fallback_title
+
+    meta_title = title_content.strip() if title_content else fallback_title
+    meta_description = meta_desc_tag.get("content").strip() if meta_desc_tag and meta_desc_tag.get("content") else "Meta description not found"
+
     return meta_title, meta_description
+
 
 def extract_all_meta(soup):
     meta_tags = {}
