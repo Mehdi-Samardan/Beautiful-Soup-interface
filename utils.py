@@ -145,6 +145,7 @@ def send_all_properties(bundle, webhook_url):
 
 def main():
     # Set content_mode to "clean" for basic HTML (only p, a, ul, ol, li), or "full" for complete HTML document.
+    # Test
     content_mode = "clean"
     url = "https://www.ellindecoratie.nl"
     webhook_url = "https://hook.eu2.make.com/is1dhkyhge8iuqg4jsxykh6dkyaejawy"
