@@ -12,6 +12,7 @@ RESULTS = {}
 # Update webhook URL as needed.
 WEBHOOK_URL = "https://hook.eu2.make.com/is1dhkyhge8iuqg4jsxykh6dkyaejawy"
 
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
@@ -21,9 +22,11 @@ def index():
             error = "Please enter a valid URL."
             return render_template("index.html", error=error)
         headers = {
-            "User-Agent": ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                           "AppleWebKit/537.36 (KHTML, like Gecko) "
-                           "Chrome/87.0.4280.66 Safari/537.36")
+            "User-Agent": (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/87.0.4280.66 Safari/537.36"
+            )
         }
         result = process_url(url_input, headers, content_mode=content_mode)
         if not result:
@@ -34,6 +37,7 @@ def index():
         return render_template("result.html", result=result, process_id=process_id)
     return render_template("index.html")
 
+
 @app.route("/send_webhook/<process_id>", methods=["POST"])
 def send_webhook(process_id):
     result = RESULTS.get(process_id)
@@ -43,6 +47,7 @@ def send_webhook(process_id):
     del RESULTS[process_id]
     return render_template("webhook_sent.html", process_id=process_id)
 
+
 @app.route("/download_zip")
 def download_zip():
     file_path = request.args.get("file")
@@ -50,14 +55,21 @@ def download_zip():
         return send_file(file_path, as_attachment=True)
     return "File not found.", 404
 
+
 @app.route("/download_json/<process_id>")
 def download_json(process_id):
     result = RESULTS.get(process_id)
     if not result:
         return "Process not found.", 404
     json_str = json.dumps(result, indent=4)
-    return Response(json_str, mimetype="application/json",
-                    headers={"Content-Disposition": f"attachment;filename=result_{process_id}.json"})
+    return Response(
+        json_str,
+        mimetype="application/json",
+        headers={
+            "Content-Disposition": f"attachment;filename=result_{process_id}.json"
+        },
+    )
+
 
 if __name__ == "__main__":
     app.run(debug=True)
